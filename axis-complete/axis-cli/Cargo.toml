@@ -1,0 +1,22 @@
+[package]
+name = "axis-cli"
+version = "0.2.0"
+edition = "2021"
+description = "WCAG 2.2 accessibility checker CLI — powered by AXIS-CORE"
+license = "GPL-3.0"
+repository = "https://github.com/ABHIRAM-CREATOR06/Acess1"
+keywords = ["accessibility", "wcag", "cli", "a11y"]
+
+[[bin]]
+name = "axis"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+colored = "2"
+glob = "0.3"
+reqwest = { version = "0.11", features = ["blocking"] }
+scraper = "0.18"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+walkdir = "2"

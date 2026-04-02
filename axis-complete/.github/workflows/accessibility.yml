@@ -1,0 +1,70 @@
+name: Accessibility Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  accessibility:
+    name: AXIS Accessibility Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            axis-cli/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('axis-cli/Cargo.lock') }}
+
+      - name: Build axis-cli
+        working-directory: axis-cli
+        run: cargo build --release
+
+      - name: Install axis globally
+        run: |
+          cp axis-cli/target/release/axis /usr/local/bin/axis
+          chmod +x /usr/local/bin/axis
+
+      - name: Scan local HTML files
+        run: |
+          axis scan ./src \
+            --format json \
+            --output accessibility-report.json
+        continue-on-error: true
+
+      - name: Check live URL (if applicable)
+        run: |
+          axis ci https://your-site.com \
+            --threshold 80 \
+            --json
+        continue-on-error: true
+
+      - name: Upload accessibility report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: accessibility-report
+          path: accessibility-report.json
+          retention-days: 30
+
+      - name: Enforce minimum score on PR
+        if: github.event_name == 'pull_request'
+        run: |
+          axis scan ./src --format json --output pr-report.json
+          SCORE=$(cat pr-report.json | python3 -c "import sys,json; print(json.load(sys.stdin)['average_score'])")
+          echo "Average accessibility score: $SCORE"
+          if [ "$SCORE" -lt "80" ]; then
+            echo "Accessibility score $SCORE is below minimum threshold of 80"
+            exit 1
+          fi

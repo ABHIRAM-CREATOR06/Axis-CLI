@@ -20,6 +20,7 @@ axis (Rust CLI)
 ### Option 1 — Build from source (Rust)
 
 ```bash
+cd axis-complete
 cd axis-cli
 cargo build --release
 cp target/release/axis /usr/local/bin/axis
