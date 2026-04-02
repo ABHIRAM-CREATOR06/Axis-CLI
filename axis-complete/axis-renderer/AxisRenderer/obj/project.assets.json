@@ -598,11 +598,11 @@
   "project": {
     "version": "0.2.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
+      "projectUniqueName": "C:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
       "projectName": "axis-render",
-      "projectPath": "c:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
+      "projectPath": "C:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
       "packagesPath": "C:\\Users\\abhir\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\obj\\",
+      "outputPath": "C:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\abhir\\AppData\\Roaming\\NuGet\\NuGet.Config"

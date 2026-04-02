@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ppWuw5L9uAE=",
+  "dgSpecHash": "xlis4VssZis=",
   "success": true,
-  "projectFilePath": "c:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
+  "projectFilePath": "C:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\abhir\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
     "C:\\Users\\abhir\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
@@ -21,9 +21,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "axis-render depends on PuppeteerSharp (>= 20.0.1) but PuppeteerSharp 20.0.1 was not found. PuppeteerSharp 20.0.2 was resolved instead.",
-      "projectPath": "c:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
+      "projectPath": "C:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
       "warningLevel": 1,
-      "filePath": "c:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
+      "filePath": "C:\\Users\\abhir\\OneDrive\\Documents\\GitHub\\Axis-CLI\\axis-complete\\axis-renderer\\AxisRenderer\\AxisRenderer.csproj",
       "libraryId": "PuppeteerSharp",
       "targetGraphs": [
         "net9.0",
