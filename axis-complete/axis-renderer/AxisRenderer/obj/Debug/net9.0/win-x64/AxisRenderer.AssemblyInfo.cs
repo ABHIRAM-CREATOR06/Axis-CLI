@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Headless Chrome renderer for AXIS accessibility checker")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.2.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.2.0+9526be36f12507da1e6bd32957f68e4a493be973")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.2.0+e3fd16c535d7e8992993c8cfb21e2ab87fab46df")]
 [assembly: System.Reflection.AssemblyProductAttribute("axis-render")]
 [assembly: System.Reflection.AssemblyTitleAttribute("axis-render")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.2.0.0")]

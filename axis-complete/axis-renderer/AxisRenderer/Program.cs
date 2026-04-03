@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 // Parse arguments
 var url = string.Empty;
-var timeout = 60000; // 60 s — enough for slow/heavy sites like sngce.ac.in
+var timeout = 60000;
 
 for (int i = 0; i < args.Length; i++)
 {
@@ -30,10 +30,16 @@ if (string.IsNullOrEmpty(url))
     Environment.Exit(1);
 }
 
-// Give Chrome a stable, writable directory for its metrics/histogram files.
-// A fixed path (not a random GUID) lets Chrome reuse its profile across runs
-// — faster cold starts and no more SetupMetrics stderr noise.
-var userDataDir = Path.Combine(Path.GetTempPath(), "axis-render-chrome");
+// Use a fresh temporary directory for every run so Chrome never serves
+// a cached page from a previous check. This is the key fix for identical
+// results across different URLs.
+// The base dir holds the Chrome binary (stable, downloaded once).
+// Each run gets its own uuid subdirectory for its user-data-dir.
+var baseDir = Path.Combine(Path.GetTempPath(), "axis-render-chrome");
+Directory.CreateDirectory(baseDir);
+
+var runId = Guid.NewGuid().ToString("N")[..8]; // short 8-char id
+var userDataDir = Path.Combine(baseDir, "run-" + runId);
 Directory.CreateDirectory(userDataDir);
 
 var serializerOptions = new JsonSerializerOptions
@@ -45,7 +51,7 @@ var serializerOptions = new JsonSerializerOptions
 
 try
 {
-    // PuppeteerSharp 20.x: only download Chrome when it isn't present yet.
+    // Only download Chrome when it isn't present yet.
     var fetcherOptions = new BrowserFetcherOptions { Browser = SupportedBrowser.Chrome };
     var browserFetcher = new BrowserFetcher(fetcherOptions);
 
@@ -60,6 +66,7 @@ try
     {
         Headless = true,
         Browser = SupportedBrowser.Chrome,
+        // Fresh per-run profile — no stale cache across URLs.
         UserDataDir = userDataDir,
         Args = new[]
         {
@@ -81,10 +88,17 @@ try
             "--safebrowsing-disable-auto-update",
             "--disable-histogram-customizer",
             "--disable-field-trial-config",
+            // Disable ALL caching so every run fetches fresh HTML.
+            "--disk-cache-size=0",
+            "--disable-application-cache",
+            "--disable-cache",
         }
     });
 
     await using var page = await browser.NewPageAsync();
+
+    // Disable cache at the protocol level as well — belt and braces.
+    await page.SetCacheEnabledAsync(false);
 
     var requests = new List<RequestEntry>();
     long totalBytes = 0;
@@ -116,16 +130,12 @@ try
     {
         await page.GoToAsync(url, new NavigationOptions
         {
-            // WaitUntilNavigation.Load waits only for the load event — much
-            // more reliable than the default DOMContentLoaded on heavy sites.
             WaitUntil = new[] { WaitUntilNavigation.Load },
             Timeout = timeout
         });
     }
     catch (PuppeteerSharp.NavigationException navEx)
     {
-        // Timeout during navigation is common on heavy sites.
-        // Try to grab whatever partial HTML the page managed to load.
         stopwatch.Stop();
         string partialHtml;
         try { partialHtml = await page.GetContentAsync(); }
@@ -133,8 +143,6 @@ try
 
         if (!string.IsNullOrWhiteSpace(partialHtml))
         {
-            // We got partial HTML — treat as a soft success so the Rust CLI
-            // can still run accessibility checks on what was loaded.
             Console.Error.WriteLine($"  Navigation timed out but partial HTML captured ({partialHtml.Length} chars).");
             var partial = new RenderResult
             {
@@ -144,16 +152,12 @@ try
                 TotalBytes = (long)partialHtml.Length,
                 RequestCount = requests.Count,
                 Requests = requests,
-                ScreenshotBase64 = null,
-                Error = null   // not an error — we have HTML to check
+                Error = null
             };
             Console.WriteLine(JsonSerializer.Serialize(partial, serializerOptions));
             Environment.Exit(0);
         }
 
-        // Truly no HTML at all — report the timeout as an error.
-        // IMPORTANT: exit 0 so that Rust reads our JSON instead of treating
-        // a non-zero exit as a crash with no output.
         var timeoutResult = new RenderResult
         {
             Html = string.Empty,
@@ -162,11 +166,10 @@ try
             TotalBytes = 0,
             RequestCount = requests.Count,
             Requests = requests,
-            ScreenshotBase64 = null,
             Error = navEx.Message
         };
         Console.WriteLine(JsonSerializer.Serialize(timeoutResult, serializerOptions));
-        Environment.Exit(0); // exit 0 so Rust can read & interpret the error field
+        Environment.Exit(0);
         return;
     }
 
@@ -203,9 +206,6 @@ try
 }
 catch (Exception ex)
 {
-    // Catch-all for unexpected errors (launch failure, etc.).
-    // Always exit 0 so the Rust side reads our JSON and handles the error
-    // field gracefully rather than seeing an empty stdout crash.
     var error = new RenderResult
     {
         Html = string.Empty,
@@ -214,11 +214,15 @@ catch (Exception ex)
         TotalBytes = 0,
         RequestCount = 0,
         Requests = new List<RequestEntry>(),
-        ScreenshotBase64 = null,
         Error = ex.Message
     };
     Console.WriteLine(JsonSerializer.Serialize(error, serializerOptions));
     Environment.Exit(0);
+}
+finally
+{
+    // Clean up this run's temporary profile directory.
+    try { Directory.Delete(userDataDir, recursive: true); } catch { }
 }
 
 // ── Data models ───────────────────────────────────────────────────────────────
