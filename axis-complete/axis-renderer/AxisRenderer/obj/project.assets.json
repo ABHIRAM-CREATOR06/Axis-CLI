@@ -589,7 +589,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Microsoft.NET.ILLink.Tasks >= 9.0.14",
-      "PuppeteerSharp >= 20.0.1"
+      "PuppeteerSharp >= 20.0.2"
     ]
   },
   "packageFolders": {
@@ -643,7 +643,7 @@
           },
           "PuppeteerSharp": {
             "target": "Package",
-            "version": "[20.0.1, )"
+            "version": "[20.0.2, )"
           }
         },
         "imports": [
@@ -684,18 +684,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "axis-render depends on PuppeteerSharp (>= 20.0.1) but PuppeteerSharp 20.0.1 was not found. PuppeteerSharp 20.0.2 was resolved instead.",
-      "libraryId": "PuppeteerSharp",
-      "targetGraphs": [
-        "net9.0",
-        "net9.0/win-x64"
-      ]
-    }
-  ]
+  }
 }

@@ -15,7 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PuppeteerSharp" Version="20.0.1" />
+    <!-- Pinned to 20.0.2 — the version that actually resolves (silences NU1603) -->
+    <PackageReference Include="PuppeteerSharp" Version="20.0.2" />
   </ItemGroup>
 
 </Project>

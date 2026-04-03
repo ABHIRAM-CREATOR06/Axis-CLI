@@ -1,0 +1,2 @@
+C:\Users\abhir\OneDrive\Documents\GitHub\Axis-CLI\axis-complete\axis-renderer\AxisRenderer\bin\Release\net9.0\win-x64\publish\axis-render.pdb
+C:\Users\abhir\OneDrive\Documents\GitHub\Axis-CLI\axis-complete\axis-renderer\AxisRenderer\bin\Release\net9.0\win-x64\publish\axis-render.exe
